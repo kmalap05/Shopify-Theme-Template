@@ -1,0 +1,25 @@
+{
+  "name": "Article",
+  "layout": "theme",
+  "sections": {
+    "template-article": {
+      "type": "dev__article",
+      "blocks": {
+        "title": {
+          "type": "article_title"
+        },
+        "published_by": {
+          "type": "article_published_by"
+        },
+        "featured_image": {
+          "type": "article_featured_image"
+        },
+        "content": {
+          "type": "article_content"
+        }
+      },
+      "block_order": ["featured_image", "published_by", "title", "content"]
+    }
+  },
+  "order": ["template-article"]
+}

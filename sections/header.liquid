@@ -1,0 +1,160 @@
+{% assign mainMenuLinklist = linklists[section.settings.menu].links %}
+
+<nav class="relative px-4 py-4 flex justify-between items-center bg-white">
+  <a class="text-2xl font-bold leading-none" href="{{ routes.root_url }}">
+    {{ section.settings.shop_name }}
+  </a>
+  <div class="lg:hidden">
+    <button class="navbar-burger flex items-center text-blue-600 p-3">
+      {% render 'icon-hamburger' %}
+    </button>
+  </div>
+  <ul class="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:flex lg:mx-auto lg:items-center lg:w-auto lg:space-x-6">
+    {% for link in mainMenuLinklist %}
+      <li>
+        <a class="text-md text-gray-800 hover:text-gray-600" href="{{link.url}}">{{ link.title }}</a>
+      </li>
+      {% if forloop.last %}
+        <!-- This is the last iteration, so don't include the SVG -->
+      {% else %}
+        <li class="text-gray-300">
+          {% render 'icon-stroke' %}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+  {% if shop.customer_accounts_enabled %}
+    <a
+      class="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-3 text-md text-gray-800 hover:text-gray-600"
+      href="{{ routes.account_login_url }}"
+      >Sign In</a
+    >
+    <a
+      class="hidden lg:inline-block py-2 px-3 text-md text-gray-800 hover:text-gray-600"
+      href="{{ routes.account_register_url }}"
+      >Sign up</a
+    >
+  {% endif %}
+  <a
+    class="hidden lg:inline-block py-2 px-3 text-md font-bold"
+    href="{{ routes.cart_url }}"
+  >
+    {%- render 'icon-shopping-bag' -%}
+  </a>
+</nav>
+<div class="navbar-menu relative z-50 hidden">
+  <div class="navbar-backdrop fixed inset-0 bg-gray-800 opacity-25"></div>
+  <nav class="fixed top-0 left-0 bottom-0 flex flex-col w-5/6 max-w-sm py-6 px-6 bg-white border-r overflow-y-auto">
+    <div class="flex items-center mb-8">
+      <a class="mr-auto text-3xl font-bold leading-none" href="{{ routes.root_url }}">
+        {{ section.settings.shop_name }}
+      </a>
+      <button class="navbar-close">
+        {% render 'icon-close' %}
+      </button>
+    </div>
+    <div>
+      <ul>
+        {% for link in mainMenuLinklist %}
+          <li class="mb-1">
+            <a
+              class="block p-4 text-sm font-semibold text-gray-800 hover:text-gray-600"
+              href="{{link.url}}"
+            >
+              {{- link.title -}}
+            </a>
+          </li>
+        {% endfor %}
+        <li class="mb-1">
+          <a
+            class="block p-4 text-sm font-semibold text-gray-800 hover:text-gray-600"
+            href="{{routes.cart_url}}"
+          >
+            <div class="flex items-center">
+              Cart <span class="inline-block ml-2">{% render 'icon-shopping-bag' %}</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+    {% if shop.customer_accounts_enabled %}
+      <div class="mt-auto">
+        <div class="pt-6">
+          <a
+            class="block px-4 py-3 mb-3 leading-loose text-xs text-center font-semibold leading-none bg-gray-50 hover:bg-gray-100 rounded-xl"
+            href="{{ routes.account_login_url }}"
+            >Sign in</a
+          >
+          <a
+            class="block px-4 py-3 mb-2 leading-loose text-xs text-center text-white font-semibold bg-blue-600 hover:bg-blue-700  rounded-xl"
+            href="{{ routes.account_register_url }}"
+            >Sign Up</a
+          >
+        </div>
+      </div>
+    {% endif %}
+  </nav>
+</div>
+
+<script>
+  // Burger menus
+  document.addEventListener('DOMContentLoaded', function () {
+    // open
+    const burger = document.querySelectorAll('.navbar-burger');
+    const menu = document.querySelectorAll('.navbar-menu');
+
+    if (burger.length && menu.length) {
+      for (var i = 0; i < burger.length; i++) {
+        burger[i].addEventListener('click', function () {
+          for (var j = 0; j < menu.length; j++) {
+            menu[j].classList.toggle('hidden');
+          }
+        });
+      }
+    }
+
+    // close
+    const close = document.querySelectorAll('.navbar-close');
+    const backdrop = document.querySelectorAll('.navbar-backdrop');
+
+    if (close.length) {
+      for (var i = 0; i < close.length; i++) {
+        close[i].addEventListener('click', function () {
+          for (var j = 0; j < menu.length; j++) {
+            menu[j].classList.toggle('hidden');
+          }
+        });
+      }
+    }
+
+    if (backdrop.length) {
+      for (var i = 0; i < backdrop.length; i++) {
+        backdrop[i].addEventListener('click', function () {
+          for (var j = 0; j < menu.length; j++) {
+            menu[j].classList.toggle('hidden');
+          }
+        });
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "shop_name",
+      "label": "Shop Name",
+      "default": "Bacca Bucci"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Select Menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

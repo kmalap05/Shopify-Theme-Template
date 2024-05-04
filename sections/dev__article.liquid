@@ -1,0 +1,87 @@
+<article class="container my-10 mx-auto md:px-6">
+  <div class="mb-32">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'article_title' %}
+          <a href="{{ blog.url }}" class="text-base uppercase text-gray-500 hover:text-gray-900 font-bold">
+            {{- blog.title -}}
+          </a>
+          <h1 class="mb-6 text-3xl font-bold">
+            <a href="{{ article.url }}">{{ article.title }}</a>
+          </h1>
+        {% when 'article_published_by' %}
+          {% if section.settings.show_author %}
+            <div class="mb-6 flex items-center">
+              <div>
+                <span>
+                  Published <u class="no-underline">@ {{ article.created_at | date: '%Y-%m-%d %H:%M:%S' }}</u> by
+                </span>
+                <a href="{{ article.url }}" class="font-medium">{{ article.author }}</a>
+              </div>
+            </div>
+          {% endif %}
+        {% when 'article_featured_image' %}
+          {% if article.image != blank %}
+            {% assign resized_image = article.image | image_url: width: 600, height: 400 %}
+            <img
+              src="{{ resized_image }}"
+              alt="{{ article.title }}"
+              width="600"
+              height="400"
+              class="w-full object-cover lg:rounded mb-6 shadow-lg dark:shadow-black/20 h-[28em]"
+            >
+          {% else %}
+            {% assign placeholder_image = 'lifestyle-1' %}
+            {{
+              placeholder_image
+              | placeholder_svg_tag: 'w-full object-cover lg:rounded mb-6 shadow-lg dark:shadow-black/20 h-[28em]'
+            }}
+          {% endif %}
+        {% when 'article_content' %}
+          <p>{{ article.content }}</p>
+        {% else %}
+
+      {% endcase %}
+    {% endfor %}
+  </div>
+</article>
+
+{% if blog.comments_enabled? %}
+  Hello World
+{% endif %}
+
+{% schema %}
+{
+  "name": "Article",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show Published By",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "article_title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "article_published_by",
+      "name": "Published By",
+      "limit": 1
+    },
+    {
+      "type": "article_featured_image",
+      "name": "Thumbnail",
+      "limit": 1
+    },
+    {
+      "type": "article_content",
+      "name": "Content",
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}
